@@ -67,12 +67,52 @@
       <section id="menu" class="section">
         <h2>Our Menu</h2>
         <ul class="menu-list">
-          <li><span>Pear Blossom Latte</span> <span>$6</span></li>
-          <li><span>Honey Pear Green Tea</span> <span>$5</span></li>
-          <li><span>Pawsome Matcha</span> <span>$5.50</span></li>
-          <li><span>Tabby's Caramel Cold Brew</span> <span>$6.50</span></li>
-          <li><span>Kitten's Chamomile</span> <span>$4</span></li>
+          <li data-id="pear_latte" data-name="Pear Blossom Latte" data-price="6" data-tags="">
+            <span>Pear Blossom Latte</span>
+            <div class="menu-item-right">
+              <span class="menu-price">$6</span>
+              <button class="add-to-cart-btn">+ Add</button>
+            </div>
+          </li>
+          <li data-id="honey_tea" data-name="Honey Pear Green Tea" data-price="5" data-tags="caffeine-free">
+            <span>Honey Pear Green Tea <em class="tag">caffeine-free</em></span>
+            <div class="menu-item-right">
+              <span class="menu-price">$5</span>
+              <button class="add-to-cart-btn">+ Add</button>
+            </div>
+          </li>
+          <li data-id="pawsome_matcha" data-name="Pawsome Matcha" data-price="5.50" data-tags="vegan">
+            <span>Pawsome Matcha <em class="tag">vegan</em></span>
+            <div class="menu-item-right">
+              <span class="menu-price">$5.50</span>
+              <button class="add-to-cart-btn">+ Add</button>
+            </div>
+          </li>
+          <li data-id="caramel_cold_brew" data-name="Tabby's Caramel Cold Brew" data-price="6.50" data-tags="">
+            <span>Tabby's Caramel Cold Brew</span>
+            <div class="menu-item-right">
+              <span class="menu-price">$6.50</span>
+              <button class="add-to-cart-btn">+ Add</button>
+            </div>
+          </li>
+          <li data-id="chamomile" data-name="Kitten's Chamomile" data-price="4" data-tags="caffeine-free,vegan">
+            <span>Kitten's Chamomile <em class="tag">caffeine-free, vegan</em></span>
+            <div class="menu-item-right">
+              <span class="menu-price">$4</span>
+              <button class="add-to-cart-btn">+ Add</button>
+            </div>
+          </li>
         </ul>
+
+        <div class="cart-section" id="cart-section">
+          <h3>Your Order</h3>
+          <ul class="cart-list" id="cart-list"></ul>
+          <p class="cart-empty" id="cart-empty">Your cart is empty. Add a drink above!</p>
+          <div class="cart-footer" id="cart-footer" hidden>
+            <span class="cart-total-label">Total: <strong id="cart-total">$0.00</strong></span>
+            <button class="btn-secondary" id="cart-clear">Clear Cart</button>
+          </div>
+        </div>
       </section>
 
       <section id="reservations" class="section">
@@ -142,5 +182,7 @@
     <script src="js/favorites-ui.js"></script>
     <script src="js/reservations.js"></script>
     <script src="js/reservations-ui.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/cart-ui.js"></script>
   </body>
 </html>
