@@ -1,16 +1,17 @@
 # Purrfect Pear Cat Cafe
 
-A cozy, pear-themed cat cafe website where visitors can explore resident cats, browse the handcrafted drink menu, and plan their visit. Designed with warm green and pear-yellow tones for a welcoming, nature-inspired feel.
+A cozy, pear-themed cat cafe website where visitors can explore resident cats, browse the handcrafted drink menu, and reserve thir table. Designed with warm green and pear tones for a welcoming, nature-inspired feel. All features are funtional and persist data in the browser using localStorage.
 
 ---
 
-## Planned Features
+## Completed Features
 
-1. **Cat Profiles Page** — Individual pages for each resident cat with photos, personality descriptions, and adoption status.
-2. **Interactive Menu** — Filterable menu with seasonal specials, dietary tags (vegan, caffeine-free), and a photo gallery.
-3. **Reservation System** — A simple booking form to reserve a table and guarantee cat cuddle time.
-4. **Adoption Inquiry Form** — A contact form for visitors interested in adopting one of our rescue cats.
-5. **Events Calendar** — A monthly calendar highlighting themed events like "Kitten Yoga," "Trivia Nights," and "Adoption Saturdays."
+1. **Cat Favorites** — Users can favorite resident cats; selections persist across page reloads.
+2. **Interactive Reservations Form** — Users can book, edit, and cancel a table; reservations are saved in localStorage and persist on page refresh.
+3. **Cart / Menu Functionality** — Add drinks to a cart, adjust quantities, and remove items; cart persists while browsing.
+4. **Cat Manager Admin Panel** — Staff can create, edit, and delete cat profiles via a dedicated admin page backed by localStorage.
+5. **Responsive Design** — Works smoothly on desktop and mobile.
+6. **Iterative Visual Design** — Three rounds of style improvements, including font and color updates, logo refinements, and a subtle pear watermark.
 
 ---
 
@@ -20,33 +21,41 @@ A cozy, pear-themed cat cafe website where visitors can explore resident cats, b
 |------------|-----------------------------------|
 | Markup     | HTML5                             |
 | Styling    | CSS3 (custom properties, grid, flexbox) |
+| Scripting  | JavaScript (vanilla)              |
+| Data       | localStorage (browser persistence)|
 | Version Control | Git / GitHub                 |
-| Deployment | Netlify or GitHub Pages           |
+| Deployment | Netlify                           |
+| AI Assistance| Claude Code                     |
+
 
 ---
 
 ## Folder Structure
 
 ```
-CatCafe/
-├── index.html          # Main landing page
-├── styles.css          # Global stylesheet
-├── .gitignore
-├── README.md
-│
-├── pages/              # Additional HTML pages
-│   ├── cats.html
-│   ├── menu.html
-│   ├── reservations.html
-│   └── events.html
-│
-├── css/                # Per-page or component stylesheets (future)
-│   └── cats.css
-│
-├── js/                 # JavaScript (future interactivity)
-│   └── menu-filter.js
-│
-└── assets/
-    ├── images/         # Cat photos, decor images
-    └── icons/          # Favicon, logo assets
+ CatCafe/
+  ├── index.html          # Main landing page
+  ├── admin.html          # Cat Manager admin panel
+  ├── styles.css          # Global stylesheet
+  ├── .gitignore
+  ├── README.md
+  ├── TRANSCRIPT-HIGHLIGHTS.md
+  │
+  └── js/                 # JavaScript — logic and UI wiring
+      ├── storage.js          # Shared localStorage helpers
+      ├── favorites.js        # Cat favorites CRUD
+      ├── favorites-ui.js     # Favorites wired to DOM
+      ├── reservations.js     # Reservations CRUD
+      ├── reservations-ui.js  # Reservations form and list UI
+      ├── cart.js             # Menu cart CRUD
+      ├── cart-ui.js          # Cart wired to menu and DOM
+      ├── cats.js             # Cat profiles CRUD
+      └── cats-ui.js          # Cat Manager admin UI
+
+  ---
+
+  ## Live Site
+
+  Deployed at: https://purrfectpear.netlify.app
+
 ```
