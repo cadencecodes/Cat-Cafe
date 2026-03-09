@@ -76,9 +76,7 @@ The site is live at [purrfectpear.netlify.app](https://purrfectpear.netlify.app/
 
 ## What I Learned
 
-<!-- Add 3-5 sentences here about your AI development experience.
-     Example topics: how prompting changed as you worked, where AI helped most,
-     a moment you pushed back on a suggestion, what you'd do differently. -->
+During this project, I learned that smaller prompts lead to better results. When I gave AI too much at once, it would change multiple things simultaneously, making errors more likely. I also learned it is important to plan before you start coding — having a clear feature list and structure helped me understand the full project scope and what I needed to do. In the future, I would keep note of transcript highlights throughout the process, rather than trying to compile them all at the end.
 
 ---
 
