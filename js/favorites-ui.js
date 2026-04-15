@@ -21,4 +21,4 @@ function initFavorites() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", initFavorites);
+// initFavorites() is called by cats-public.js after cards are rendered.

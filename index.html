@@ -45,25 +45,8 @@
 
       <section id="cats" class="section alt">
         <h2>Meet Our Cats</h2>
-        <div class="card-grid">
-          <div class="card">
-            <div class="cat-icon">🐱</div>
-            <h3>Bartlett</h3>
-            <p>Age 3 &mdash; Loves chin scratches and napping in sunny spots.</p>
-            <button class="fav-btn" data-cat-id="cat_bartlett">♡</button>
-          </div>
-          <div class="card">
-            <div class="cat-icon">🐱</div>
-            <h3>Anjou</h3>
-            <p>Age 5 &mdash; A gentle giant who will sit on your laptop.</p>
-            <button class="fav-btn" data-cat-id="cat_anjou">♡</button>
-          </div>
-          <div class="card">
-            <div class="cat-icon">🐱</div>
-            <h3>Bosc</h3>
-            <p>Age 1 &mdash; Playful kitten with a fondness for string toys.</p>
-            <button class="fav-btn" data-cat-id="cat_bosc">♡</button>
-          </div>
+        <div class="card-grid" id="cats-grid">
+          <p class="cats-loading">Loading cats&hellip;</p>
         </div>
       </section>
 
@@ -179,8 +162,15 @@
 
     <footer>
       <p>&copy; 2026 Purrfect Pear Cat Cafe. All rights reserved.</p>
-      <a href="admin.html" class="staff-link">Staff Portal</a>
+      <a href="login.html" class="staff-link">Staff Portal</a>
     </footer>
+    <!-- Firebase SDK (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/cats-public.js"></script>
+
     <script src="js/storage.js"></script>
     <script src="js/favorites.js"></script>
     <script src="js/favorites-ui.js"></script>

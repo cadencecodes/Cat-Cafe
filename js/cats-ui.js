@@ -1,12 +1,12 @@
 // Wires cats.js CRUD to the Cat Manager admin UI.
-// Depends on: storage.js, cats.js (loaded before this script)
+// Depends on: firebase.js, cats.js (loaded before this script)
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form        = document.getElementById("cat-form");
-  const submitBtn   = document.getElementById("cat-submit");
-  const cancelBtn   = document.getElementById("cat-cancel");
-  const errorMsg    = document.getElementById("cat-error");
-  const catList     = document.getElementById("cat-list");
+document.addEventListener("DOMContentLoaded", async () => {
+  const form      = document.getElementById("cat-form");
+  const submitBtn = document.getElementById("cat-submit");
+  const cancelBtn = document.getElementById("cat-cancel");
+  const errorMsg  = document.getElementById("cat-error");
+  const catList   = document.getElementById("cat-list");
 
   let editingId = null;
 
@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     form.reset();
     editingId = null;
     submitBtn.textContent = "Add Cat";
+    submitBtn.disabled = false;
     cancelBtn.hidden = true;
     hideError();
   }
@@ -59,8 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
-  function renderCats() {
-    const cats = getCats();
+  function renderCats(cats) {
     catList.innerHTML = "";
 
     if (cats.length === 0) {
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ── Event: form submit (add or update) ─────────────────────────────────────
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const values = getFormValues();
     const error  = validate(values);
@@ -114,34 +114,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     hideError();
+    submitBtn.disabled = true;
+    submitBtn.textContent = editingId ? "Saving…" : "Adding…";
 
-    if (editingId) {
-      updateCat(editingId, values);
-    } else {
-      addCat(values);
+    try {
+      if (editingId) {
+        await updateCat(editingId, values);
+      } else {
+        await addCat(values);
+      }
+      resetForm();
+    } catch (err) {
+      showError("Failed to save. Please try again.");
+      submitBtn.disabled = false;
+      submitBtn.textContent = editingId ? "Save Changes" : "Add Cat";
+      console.error(err);
     }
-
-    resetForm();
-    renderCats();
   });
 
   // ── Event: edit and delete buttons (delegated to cat list) ─────────────────
 
-  catList.addEventListener("click", (e) => {
+  catList.addEventListener("click", async (e) => {
     const id = e.target.dataset.id;
     if (!id) return;
 
     if (e.target.classList.contains("btn-delete")) {
-      deleteCat(id);
-      renderCats();
-      if (editingId === id) resetForm();
+      try {
+        await deleteCat(id);
+        if (editingId === id) resetForm();
+      } catch (err) {
+        console.error("Failed to delete cat:", err);
+      }
       return;
     }
 
     if (e.target.classList.contains("btn-edit")) {
-      const cat = getCats().find((c) => c.id === id);
-      if (!cat) return;
-      populateForm(cat);
+      const snap = await catsCol.doc(id).get();
+      if (!snap.exists) return;
+      populateForm({ id: snap.id, ...snap.data() });
       editingId = id;
       submitBtn.textContent = "Save Changes";
       cancelBtn.hidden = false;
@@ -153,7 +163,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   cancelBtn.addEventListener("click", resetForm);
 
-  // ── Init ───────────────────────────────────────────────────────────────────
+  // ── Init: seed defaults, then listen for real-time updates ─────────────────
 
-  renderCats();
+  try {
+    await seedIfEmpty();
+  } catch (err) {
+    console.warn("seedIfEmpty failed (check Firestore security rules):", err);
+  }
+
+  catsCol.orderBy("name").onSnapshot(
+    (snap) => {
+      const cats = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      renderCats(cats);
+    },
+    (err) => {
+      console.error("onSnapshot error (check Firestore security rules):", err);
+    }
+  );
 });

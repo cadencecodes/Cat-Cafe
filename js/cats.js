@@ -1,9 +1,9 @@
-// Cat Manager CRUD — persisted as an array under a single localStorage key.
-// Depends on: storage.js (must be loaded first)
+// Cat Manager CRUD — persisted in Firestore "cats" collection.
+// Depends on: firebase.js (db must be initialized first)
 
-const CATS_KEY = "purrfect_cats";
+const catsCol = db.collection("cats");
 
-// Seed data shown when localStorage has no cats yet.
+// Seed data written to Firestore when the collection is empty.
 const DEFAULT_CATS = [
   {
     id:          "cat_bartlett",
@@ -34,73 +34,44 @@ const DEFAULT_CATS = [
   },
 ];
 
-// Returns all cats. Seeds defaults into localStorage if the key is empty.
-function getCats() {
-  const cats = storage.get(CATS_KEY);
-  if (cats.length === 0) {
-    storage.set(CATS_KEY, DEFAULT_CATS);
-    return DEFAULT_CATS;
-  }
-  return cats;
+// Writes default cats to Firestore if the collection has no documents.
+async function seedIfEmpty() {
+  const snap = await catsCol.get();
+  if (!snap.empty) return;
+
+  const batch = db.batch();
+  DEFAULT_CATS.forEach((cat) => {
+    const { id, ...data } = cat;
+    batch.set(catsCol.doc(id), data);
+  });
+  await batch.commit();
 }
 
-// Adds a new cat profile with a generated unique ID.
-// cat must include: name, breed, age, personality, photo, adopted
-// Returns the updated cats array.
-function addCat(cat) {
-  const cats = getCats();
-
-  const newCat = {
-    id:          "cat_" + Date.now(),
-    name:        cat.name?.trim() || "",
-    breed:       cat.breed?.trim() || "",
-    age:         Number(cat.age) || 0,
+// Adds a new cat. Firestore auto-generates the document ID.
+async function addCat(cat) {
+  await catsCol.add({
+    name:        cat.name?.trim()        || "",
+    breed:       cat.breed?.trim()       || "",
+    age:         Number(cat.age)         || 0,
     personality: cat.personality?.trim() || "",
-    photo:       cat.photo?.trim() || "",
+    photo:       cat.photo?.trim()       || "",
     adopted:     Boolean(cat.adopted),
-  };
-
-  cats.push(newCat);
-  storage.set(CATS_KEY, cats);
-  return cats;
+  });
 }
 
-// Updates an existing cat by ID. Only fields provided in data are changed.
-// Returns the updated cats array, or null if the ID was not found.
-function updateCat(id, data) {
-  const cats = getCats();
-  const index = cats.findIndex((c) => c.id === id);
-
-  if (index === -1) {
-    console.warn(`updateCat: no cat found with id "${id}"`);
-    return null;
-  }
-
-  cats[index] = {
-    ...cats[index],
-    name:        data.name?.trim()        ?? cats[index].name,
-    breed:       data.breed?.trim()       ?? cats[index].breed,
-    age:         data.age !== undefined   ? Number(data.age) : cats[index].age,
-    personality: data.personality?.trim() ?? cats[index].personality,
-    photo:       data.photo?.trim()       ?? cats[index].photo,
-    adopted:     data.adopted !== undefined ? Boolean(data.adopted) : cats[index].adopted,
-  };
-
-  storage.set(CATS_KEY, cats);
-  return cats;
+// Updates an existing cat document by its Firestore document ID.
+async function updateCat(id, data) {
+  await catsCol.doc(id).update({
+    name:        data.name?.trim()        || "",
+    breed:       data.breed?.trim()       || "",
+    age:         Number(data.age)         || 0,
+    personality: data.personality?.trim() || "",
+    photo:       data.photo?.trim()       || "",
+    adopted:     Boolean(data.adopted),
+  });
 }
 
-// Removes a cat by ID.
-// Returns the updated cats array, or null if the ID was not found.
-function deleteCat(id) {
-  const cats = getCats();
-  const filtered = cats.filter((c) => c.id !== id);
-
-  if (filtered.length === cats.length) {
-    console.warn(`deleteCat: no cat found with id "${id}"`);
-    return null;
-  }
-
-  storage.set(CATS_KEY, filtered);
-  return filtered;
+// Deletes a cat document by its Firestore document ID.
+async function deleteCat(id) {
+  await catsCol.doc(id).delete();
 }
